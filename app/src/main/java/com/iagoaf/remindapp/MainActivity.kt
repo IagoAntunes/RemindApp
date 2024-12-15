@@ -14,7 +14,10 @@ import androidx.navigation.navArgument
 import com.iagoaf.remindapp.core.ui.theme.RemindAppTheme
 import com.iagoaf.remindapp.modules.auth.presentation.LoginScreen
 import com.iagoaf.remindapp.modules.splash.presentation.SplashScreen
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.HiltAndroidApp
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

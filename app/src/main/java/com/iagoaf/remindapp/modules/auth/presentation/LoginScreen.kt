@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,9 +22,10 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -44,8 +44,9 @@ import androidx.navigation.compose.rememberNavController
 import com.iagoaf.remindapp.R
 import com.iagoaf.remindapp.core.ui.theme.AppColors
 import com.iagoaf.remindapp.core.ui.theme.AppTypography
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.iagoaf.remindapp.AppScreens
 
 @Composable
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -53,12 +54,25 @@ fun LoginScreen(
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
+
+    val loginViewModel: LoginViewModel = hiltViewModel()
+
+    //FormState
     val emailState = remember { mutableStateOf("") }
     val passwordState = remember { mutableStateOf("") }
     val obscurePassword = remember { mutableStateOf(true) }
 
+    //SnackBar
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+
+    val loginState = loginViewModel.state.collectAsState().value
+    if (loginState is LoginState.Success) {
+        LaunchedEffect(Unit) {
+            navController.navigate(AppScreens.Splash.route)
+        }
+    }
+
     Scaffold(
         snackbarHost =  {
             SnackbarHost(hostState = snackbarHostState)
@@ -194,7 +208,9 @@ fun LoginScreen(
                                         snackbarHostState.showSnackbar("Snackbar")
                                     }
                                 } else {
-                                    // Call login
+                                    scope.launch {
+                                        loginViewModel.login(emailState.value, passwordState.value)
+                                    }
                                 }
                             },
                             content = {
