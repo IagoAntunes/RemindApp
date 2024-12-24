@@ -2,9 +2,11 @@ package com.iagoaf.remindapp.modules.newRecipe.presentation
 
 import android.widget.Space
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +18,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -45,6 +49,13 @@ fun NewRecipeScreen(
     val timeState = remember { mutableStateOf("") }
     val recurrenceState = remember { mutableStateOf("") }
 
+    val recurrenceList = listOf<String>(
+        "Diariamente",
+        "Semanalmente",
+        "Mensalmente",
+    )
+    val recurrenceDropDownExpanded = remember { mutableStateOf(false) }
+
     Scaffold(
         contentColor = AppColors.gray800,
         content = { paddingValues ->
@@ -60,7 +71,7 @@ fun NewRecipeScreen(
                 Image(
                     painter = painterResource(R.drawable.ic_arrow_back),
                     contentDescription = "Back",
-                    modifier = Modifier.clickable{
+                    modifier = Modifier.clickable {
                         navController.popBackStack()
                     }
                 )
@@ -144,30 +155,57 @@ fun NewRecipeScreen(
                     color = AppColors.gray100
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                TextField(
-                    value = recurrenceState.value,
-                    onValueChange = { recurrenceState.value = it },
-                    placeholder = {
-                        Text(
-                            text = "Nome do medicamento",
-                            style = AppTypography.input,
-                            color = AppColors.gray200
-                        )
-                    },
-                    colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = AppColors.gray800,
-                        focusedContainerColor = AppColors.gray800,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Transparent
-                    ),
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .background(AppColors.gray800)
                         .border(
                             width = 1.dp,
                             color = AppColors.gray400,
                             shape = RoundedCornerShape(8.dp)
                         )
-                )
+                        .padding(16.dp)
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                recurrenceDropDownExpanded.value = !recurrenceDropDownExpanded.value
+                            }
+                    ) {
+                        Text(
+                            text = recurrenceState.value,
+                            style = AppTypography.input,
+                            color = AppColors.gray200
+                        )
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_arrow_drop_down),
+                            contentDescription = "DropDown Icon",
+                            modifier = Modifier.align(Alignment.CenterVertically)
+                        )
+                    }
+                    DropdownMenu(
+                        expanded = recurrenceDropDownExpanded.value,
+                        onDismissRequest = {
+                            recurrenceDropDownExpanded.value = false
+                        },
+                        content = {
+                            recurrenceList.forEachIndexed { index, username ->
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(text = username)
+                                    },
+                                    onClick = {
+                                        recurrenceState.value = username
+                                        recurrenceDropDownExpanded.value = false
+                                    }
+                                )
+                            }
+                        }
+                    )
+                }
                 Spacer(Modifier.weight(1f))
                 Button(
                     modifier = Modifier
@@ -203,7 +241,7 @@ fun NewRecipeScreen(
     )
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun PreviewNewRecipeScreen() {
     NewRecipeScreen(rememberNavController())
