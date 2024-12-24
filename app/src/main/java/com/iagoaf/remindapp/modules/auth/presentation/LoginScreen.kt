@@ -69,7 +69,7 @@ fun LoginScreen(
     val loginState = loginViewModel.state.collectAsState().value
     if (loginState is LoginState.Success) {
         LaunchedEffect(Unit) {
-            navController.navigate(AppScreens.Splash.route)
+            navController.navigate(AppScreens.Home.route)
         }
     }
 

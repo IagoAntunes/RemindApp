@@ -13,6 +13,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.iagoaf.remindapp.core.ui.theme.RemindAppTheme
 import com.iagoaf.remindapp.modules.auth.presentation.LoginScreen
+import com.iagoaf.remindapp.modules.home.presentation.screen.HomeScreen
+import com.iagoaf.remindapp.modules.myRecipes.presentation.MyRecipesScreen
+import com.iagoaf.remindapp.modules.newRecipe.presentation.NewRecipeScreen
 import com.iagoaf.remindapp.modules.splash.presentation.SplashScreen
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.HiltAndroidApp
@@ -52,11 +55,23 @@ fun NavigationStack() {
         ) {
             LoginScreen(navController)
         }
+        composable(route = AppScreens.Home.route){
+            HomeScreen(navController)
+        }
+        composable(route = AppScreens.MyRecipes.route){
+            MyRecipesScreen(navController)
+        }
+        composable(route = AppScreens.NewRecipe.route){
+            NewRecipeScreen(navController)
+        }
     }
 }
 sealed class AppScreens(val route: String) {
     object Splash: AppScreens("splash_screen")
     object Login: AppScreens("login_screen")
+    object Home: AppScreens("home_screen")
+    object MyRecipes: AppScreens("my_recipes_screen")
+    object NewRecipe: AppScreens("new_recipe_screen")
 }
 
 

@@ -32,6 +32,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.iagoaf.remindapp.AppScreens
 import com.iagoaf.remindapp.R
 import com.iagoaf.remindapp.core.ui.theme.AppColors
 import com.iagoaf.remindapp.core.ui.theme.AppTypography
@@ -39,12 +42,13 @@ import com.iagoaf.remindapp.modules.home.presentation.components.MenuItemModule
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
+fun HomeScreen(navController: NavController) {
     Scaffold(
         containerColor = AppColors.gray600,
         content = { paddingValues ->
             Box(
                 modifier = Modifier.fillMaxSize()
+                    .padding(top = 24.dp)
             ) {
                 // Conteúdo principal da tela
                 Column {
@@ -114,7 +118,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                             subtitle = "Acompanhe os medicamentos e gerencie lembretes",
                             image = R.drawable.img_paper,
                             onClick = {
-
+                                navController.navigate(AppScreens.MyRecipes.route)
                             }
                         )
                         Spacer(modifier = Modifier.height(12.dp))
@@ -123,7 +127,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                             subtitle = "Cadastre novos lembretes de receitas",
                             image = R.drawable.img_pills,
                             onClick = {
-
+                                navController.navigate(AppScreens.NewRecipe.route)
                             }
                         )
                     }
@@ -148,5 +152,5 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun PreviewHomePage() {
-    HomeScreen()
+    HomeScreen(rememberNavController())
 }
