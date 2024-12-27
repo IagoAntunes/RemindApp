@@ -1,17 +1,13 @@
 package com.iagoaf.remindapp.modules.home.presentation.screen
 
 import android.annotation.SuppressLint
-import android.view.MenuItem
-import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -139,9 +135,16 @@ fun HomeScreen(navController: NavController) {
                     colorFilter = ColorFilter.tint(AppColors.redBase),
                     contentDescription = "",
                     modifier = Modifier
-                        .align(Alignment.TopEnd) // Posiciona no canto superior direito
-                        .padding(16.dp) // Margem da borda
-                        .size(24.dp) // Tamanho do ícone
+                        .align(Alignment.TopEnd)
+                        .padding(16.dp)
+                        .size(24.dp)
+                        .clickable{
+                            navController.navigate(AppScreens.Login.route) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    inclusive = true
+                                }
+                            }
+                        }
                 )
             }
         }

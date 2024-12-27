@@ -4,6 +4,7 @@ import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,6 +35,7 @@ fun ItemMedicineRecipe(
     title: String,
     time: String,
     repeatTime: String,
+    onDelete: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -75,7 +77,11 @@ fun ItemMedicineRecipe(
                     colorFilter = ColorFilter.tint(
                         AppColors.redBase
                     ),
-                    modifier = Modifier.size(16.dp)
+                    modifier = Modifier
+                        .size(16.dp)
+                        .clickable{
+                            onDelete()
+                        }
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
@@ -159,6 +165,9 @@ private fun PreviewItemMedicineRecipe() {
     ItemMedicineRecipe(
         title = "Dipirona",
         time = "08:00",
-        repeatTime = "A cada 12 horas"
+        repeatTime = "A cada 12 horas",
+        onDelete = {
+
+        }
     )
 }

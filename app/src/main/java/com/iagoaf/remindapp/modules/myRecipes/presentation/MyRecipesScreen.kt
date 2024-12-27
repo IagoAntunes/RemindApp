@@ -1,7 +1,5 @@
 package com.iagoaf.remindapp.modules.myRecipes.presentation
 
-import android.R.color.white
-import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,6 +22,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,17 +32,41 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.iagoaf.remindapp.R
+import com.iagoaf.remindapp.core.domain.models.RecipeModel
 import com.iagoaf.remindapp.core.ui.theme.AppColors
 import com.iagoaf.remindapp.core.ui.theme.AppTypography
 import com.iagoaf.remindapp.modules.myRecipes.presentation.components.ItemMedicineRecipe
+import kotlinx.coroutines.launch
 
 @Composable
 fun MyRecipesScreen(
     navController: NavController,
 ) {
+
+    val viewModel = hiltViewModel<MyRecipesViewModel>()
+    val coroutineScope = rememberCoroutineScope()
+    LaunchedEffect(Unit) {
+        viewModel.getAll()
+    }
+
+
+    var list = emptyList<RecipeModel>()
+
+    when (viewModel.uiState.value) {
+        is MyRecipesState.Success -> {
+            list = (viewModel.uiState.value as MyRecipesState.Success).recipes
+        }
+
+        is MyRecipesState.Error -> {}
+        is MyRecipesState.Idle -> {}
+        is MyRecipesState.Loading -> {}
+    }
+
+
     Scaffold(
         containerColor = AppColors.gray600,
         content = { paddingValues ->
@@ -73,9 +97,10 @@ fun MyRecipesScreen(
                                 Image(
                                     painterResource(R.drawable.ic_arrow_back),
                                     contentDescription = "",
-                                    modifier = Modifier.clickable{
-                                        navController.popBackStack()
-                                    }
+                                    modifier = Modifier
+                                        .clickable {
+                                            navController.popBackStack()
+                                        }
                                 )
                                 Box(
                                     modifier = Modifier
@@ -87,10 +112,12 @@ fun MyRecipesScreen(
                                         .background(AppColors.blueBase)
                                 ) {
                                     Image(
-                                        painterResource(R.drawable.ic_add),
+                                        painterResource(R.drawable.ic_healthy),
                                         contentDescription = "Add",
                                         colorFilter = ColorFilter.tint(Color.White),
-                                        modifier = Modifier.align(Alignment.Center)
+                                        modifier = Modifier
+                                            .align(Alignment.Center)
+
                                     )
                                 }
 
@@ -123,23 +150,20 @@ fun MyRecipesScreen(
                                 start = 24.dp,
                                 end = 24.dp,
                             )
-                    ){
-                        val mockList = listOf(
-                            "Receita 1",
-                            "Receita 2",
-                            "Receita 3",
-                            "Receita 4",
-                            "Receita 5"
-                        )
-
+                    ) {
                         LazyColumn(
                             contentPadding = paddingValues,
                         ) {
-                            items(mockList) { item ->
+                            items(list) { item ->
                                 ItemMedicineRecipe(
-                                    title = "Nome do remédio",
-                                    time = "14:00",
-                                    repeatTime = "A cada 12 horas"
+                                    title = item.name,
+                                    time = item.time,
+                                    repeatTime = item.recurrence,
+                                    onDelete = {
+                                        coroutineScope.launch() {
+                                            viewModel.delete(item)
+                                        }
+                                    }
                                 )
                                 Spacer(modifier = Modifier.height(12.dp))
                             }
