@@ -1,8 +1,8 @@
 ![thumbnail](https://github.com/IagoAntunes/RemindApp/blob/master/app/src/main/res/drawable/github/img_thumb.png)
 
-# :purple_heart::yellow_heart: GuessingGame
+# 💊⏰ Remind App
 
-:purple_heart::yellow_heart: Remind App
+💊⏰ Remind App
 
 This project is a medication reminder application built using Kotlin and Jetpack Compose. The main objective of the application is to help users manage their medication schedules by providing timely reminders for taking their prescribed medicines. 
 The app allows users to add new prescriptions, set specific times for medication intake, and define recurrence patterns (daily, weekly, monthly).
